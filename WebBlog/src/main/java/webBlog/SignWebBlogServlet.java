@@ -1,14 +1,11 @@
 package webBlog;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
- 
+import com.googlecode.objectify.*;
+
 import java.io.IOException;
 import java.util.Date;
 
@@ -17,6 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class SignWebBlogServlet extends HttpServlet {
+	static {
+
+        ObjectifyService.register(blogPost.class);
+
+    }
 	
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserService userService = UserServiceFactory.getUserService();
@@ -28,20 +30,19 @@ public class SignWebBlogServlet extends HttpServlet {
         // Greetings for a given Guestbook.  However, the write rate to each
         // Guestbook should be limited to ~1/second.
 
-        String webblogName = req.getParameter("webblogName");
-        Key webblogKey = KeyFactory.createKey("Webblog", webblogName);
+        String webBlogName = req.getParameter("webBlogName");
+   //   Key guestbookKey = KeyFactory.createKey("Guestbook", guestbookName);
         String content = req.getParameter("content");
-        Date date = new Date();
-        Entity blogPost = new Entity("blogPost", webblogKey);
+    //  Date date = new Date();
+    //  Entity greeting = new Entity("Greeting", guestbookKey);
        
-        blogPost.setProperty("user", user);
-        blogPost.setProperty("date", date);
-        blogPost.setProperty("content", content);
+        //greeting.setProperty("user", user);
+        //greeting.setProperty("date", date);
+        //greeting.setProperty("content", content);
 
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        datastore.put(blogPost);
-
-        resp.sendRedirect("/webblog.jsp?webblogName=" + webblogName);
+        blogPost post = new blogPost(user, content);
+        ofy().save().entity(post).now();
+        resp.sendRedirect("/webblog.jsp?webBlogName=" + webBlogName);
     }
 
 }

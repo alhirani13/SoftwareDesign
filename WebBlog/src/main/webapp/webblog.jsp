@@ -1,21 +1,23 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
-<%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
-<%@ page import="com.google.appengine.api.datastore.Query" %>
 <%@ page import="com.google.appengine.api.datastore.Entity" %>
 <%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
+<%@ page import="com.googlecode.objectify.*" %>
+<%@ page import="com.googlecode.objectify.Objectify" %>
+<%@ page import="com.googlecode.objectify.ObjectifyService" %>
+<%@ page import="webBlog.blogPost" %>
+<%@ page import="java.util.*" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+	
 
 <html>
 <head>
-   <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+   <link type="text/css" rel="stylesheet" href="/stylesheets/blog.css" />
  </head>
  
   <head>
@@ -23,11 +25,11 @@
   <body>
 
 <%
-    String webblogName = request.getParameter("webblogName");
-    if (webblogName == null) {
-    	webblogName = "default";
+    String webBlogName = request.getParameter("webBlogName");
+    if (webBlogName == null) {
+    	webBlogName = "default";
     }
-    pageContext.setAttribute("webblogName", webblogName);
+    pageContext.setAttribute("webBlogName", webBlogName);
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     if (user != null) {
@@ -43,7 +45,7 @@
 %>
 <p>Hello!
 <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-to include your name with the blog you post.</p>
+to include your name with your post.</p>
 
 <%
     }
@@ -51,45 +53,42 @@ to include your name with the blog you post.</p>
 %>
 
 <%
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key webblogKey = KeyFactory.createKey("Webblog", webblogName);
+	ObjectifyService.register(blogPost.class); 
 
-    // Run an ancestor query to ensure we see the most up-to-date
-    // view of the Greetings belonging to the selected Guestbook.
+	List<blogPost> posts = ObjectifyService.ofy().load().type(blogPost.class).list();   
 
-    Query query = new Query("blogPost", webblogKey); //.addSort("date", Query.SortDirection.DESCENDING);
-    List<Entity> blogPosts = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
-    if (blogPosts.isEmpty()) {
+	Collections.sort(posts); 
+	if (posts.isEmpty()) {
         
         %>
-        <p>Webblog '${fn:escapeXml(webblogName)}' has no messages.</p>
+        <p>Blog Post '${fn:escapeXml(webBlogName)}' has no messages.</p>
 
         <%
     } else {
 
         %>
-        <p>Posts in WebBlog '${fn:escapeXml(webblogName)}'.</p>
+        <p>Messages in Web Blog '${fn:escapeXml(webBlogName)}'.</p>
         
         <%
-        for (Entity blogPost : blogPosts) {
-            pageContext.setAttribute("webblog_content", webblog.getProperty("content"));
-            if (blogPost.getProperty("user") == null) {
+        for (blogPost post : posts) {
+            pageContext.setAttribute("blogPost_content", post.getContent());
+            if (post.getUser() == null) {
 
                 %>
                 <p>An anonymous person wrote:</p>
 
                 <%
             } else {
-                pageContext.setAttribute("webblog_user", blogPost.getProperty("user"));
+                pageContext.setAttribute("blogPost_user", post.getUser());
 
                 %>
-                <p><b>${fn:escapeXml(webblog_user.nickname)}</b> wrote:</p>
+                <p><b>${fn:escapeXml(blogPost_user.nickname)}</b> wrote:</p>
 
                 <%
             }
 
             %>
-            <blockquote>${fn:escapeXml(webblog_content)}</blockquote>
+            <blockquote>${fn:escapeXml(blogPost_content)}</blockquote>
 
             <%
         }
@@ -97,10 +96,10 @@ to include your name with the blog you post.</p>
     }
 
 %>
-    <form action="/sign" method="post">
+    <form action="/ofysign" method="post">
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Post Blog" /></div>
-      <input type="hidden" name="webblogName" value="${fn:escapeXml(webblogName)}"/>
+      <div><input type="submit" value="Post Greeting" /></div>
+      <input type="hidden" name="guestbookName" value="${fn:escapeXml(webBlogName)}"/>
 
     </form>
   </body>
