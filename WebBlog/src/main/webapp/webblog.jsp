@@ -107,7 +107,7 @@ to include your name with your post.</p>
             if (post.getUser() == null) {
 
                 %>
-                <h2 class="blog-post-title">${fn:escapeXml(blogPost_title)}</h2>
+                <h3 class="blog-post-title">${fn:escapeXml(blogPost_title)}</h3>
                 <p class="blog-post-meta">${fn:escapeXml(blogPost_date)} by an anonymous person wrote:</p>
 
                 <%
@@ -115,7 +115,7 @@ to include your name with your post.</p>
                 pageContext.setAttribute("blogPost_user", post.getUser());
 
                 %>
-                <h2 class="blog-post-title">${fn:escapeXml(blogPost_title)}</h2>
+                <h3 class="blog-post-title">${fn:escapeXml(blogPost_title)}</h3>
                 <p class="blog-post-meta">${fn:escapeXml(blogPost_date)} by <a href="#"><b>${fn:escapeXml(blogPost_user.nickname)}</b></a></p>
 
                 <%
@@ -130,14 +130,24 @@ to include your name with your post.</p>
 
     }
 
+	
 %>
+<%	if(user != null)
+	{
+	
+	 
+	%>
     <form action="/ofysign" method="post">
-      <div><h3><b>Title</b></h3></div>
-  	  <div><textarea name="title" rows="2" cols="60"></textarea></div>
+      <h4><b>Title</b></h4>
+  	  <div><textarea name="title" rows="1.75" cols="60"></textarea></div>
+  	  <h4><b>Blog Post Content</b></h4>
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
       <div><input type="submit" value="Post Blog" /></div>
       <input type="hidden" name="webBlogName" value="${fn:escapeXml(webBlogName)}"/>
-
     </form>
+    
+    <%
+    }
+    %>
   </body>
 </html>
