@@ -33,6 +33,7 @@ public class SignWebBlogServlet extends HttpServlet {
         String webBlogName = req.getParameter("webBlogName");
    //   Key guestbookKey = KeyFactory.createKey("Guestbook", guestbookName);
         String content = req.getParameter("content");
+        String title = req.getParameter("title");
     //  Date date = new Date();
     //  Entity greeting = new Entity("Greeting", guestbookKey);
        
@@ -40,7 +41,7 @@ public class SignWebBlogServlet extends HttpServlet {
         //greeting.setProperty("date", date);
         //greeting.setProperty("content", content);
 
-        blogPost post = new blogPost(user, content);
+        blogPost post = new blogPost(user, content, title);
         ofy().save().entity(post).now();
         resp.sendRedirect("/webblog.jsp?webBlogName=" + webBlogName);
     }

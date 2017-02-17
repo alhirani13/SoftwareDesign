@@ -13,17 +13,42 @@
 <%@ page import="webBlog.blogPost" %>
 <%@ page import="java.util.*" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-	
+
+
 
 <html>
 <head>
-   <link type="text/css" rel="stylesheet" href="/stylesheets/blog.css" />
+   	<link type="text/css" rel="stylesheet" href="/stylesheets/blog.css" />
+   	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Pokemon Web Blog">
+    <meta name="author" content="Al Hirani and Dylan Keeton">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Pokemon Web Blog</title>
+   
  </head>
  
-  <head>
-  </head>
   <body>
+ 
+ 	<link rel="stylesheet" type="text/css" href="blog.css">
+ 	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   
+   
+	<font color="#0e3677">
+	<h1 style = "text-align:center"><b> The Pokémon Master Blog</b></h1>
+	<h4 style ="text-align:center"> THE ULTIMATE BLOG FOR THOSE WHO WANT TO BE THE VERY BEST</h4>
+	</font>
+  	
 <%
     String webBlogName = request.getParameter("webBlogName");
     if (webBlogName == null) {
@@ -67,29 +92,39 @@ to include your name with your post.</p>
     } else {
 
         %>
-        <p>Messages in Web Blog '${fn:escapeXml(webBlogName)}'.</p>
+        
+        <div class="blog-post">
+            
+            
+          
         
         <%
+        
         for (blogPost post : posts) {
             pageContext.setAttribute("blogPost_content", post.getContent());
+            pageContext.setAttribute("blogPost_title", post.getTitle());
+            pageContext.setAttribute("blogPost_date", post.getDate());
             if (post.getUser() == null) {
 
                 %>
-                <p>An anonymous person wrote:</p>
+                <h2 class="blog-post-title">${fn:escapeXml(blogPost_title)}</h2>
+                <p class="blog-post-meta">${fn:escapeXml(blogPost_date)} by an anonymous person wrote:</p>
 
                 <%
             } else {
                 pageContext.setAttribute("blogPost_user", post.getUser());
 
                 %>
-                <p><b>${fn:escapeXml(blogPost_user.nickname)}</b> wrote:</p>
+                <h2 class="blog-post-title">${fn:escapeXml(blogPost_title)}</h2>
+                <p class="blog-post-meta">${fn:escapeXml(blogPost_date)} by <a href="#"><b>${fn:escapeXml(blogPost_user.nickname)}</b></a></p>
 
                 <%
             }
 
             %>
-            <blockquote>${fn:escapeXml(blogPost_content)}</blockquote>
-
+            <blockquote>
+              ${fn:escapeXml(blogPost_content)}</blockquote>
+		</div><!-- /.blog-post -->
             <%
         }
 
@@ -97,9 +132,11 @@ to include your name with your post.</p>
 
 %>
     <form action="/ofysign" method="post">
+      <div><h3><b>Title</b></h3></div>
+  	  <div><textarea name="title" rows="2" cols="60"></textarea></div>
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Post Greeting" /></div>
-      <input type="hidden" name="guestbookName" value="${fn:escapeXml(webBlogName)}"/>
+      <div><input type="submit" value="Post Blog" /></div>
+      <input type="hidden" name="webBlogName" value="${fn:escapeXml(webBlogName)}"/>
 
     </form>
   </body>

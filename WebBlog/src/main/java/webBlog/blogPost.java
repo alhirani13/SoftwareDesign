@@ -11,14 +11,20 @@ public class blogPost implements Comparable<blogPost> {
     @Id Long id;
     User user;
     String content;
+    String title;
     Date date;
     
     private blogPost() {}
     
-    public blogPost(User user, String content) {
+    public blogPost(User user, String content, String title) {
         this.user = user;
         this.content = content;
+        this.title = title;
         date = new Date();
+    }
+    
+	public Date getDate(){
+		return date;
     }
 
     public User getUser() {
@@ -27,6 +33,10 @@ public class blogPost implements Comparable<blogPost> {
 
     public String getContent() {
         return content;
+    }
+    
+    public String getTitle(){
+    	return title;
     }
 
     @Override
