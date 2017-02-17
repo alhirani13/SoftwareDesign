@@ -27,7 +27,7 @@
     <meta name="author" content="Al Hirani and Dylan Keeton">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Pokemon Web Blog</title>
+    <title>Pokémon Master Blog</title>
    
  </head>
  
@@ -61,17 +61,16 @@
       pageContext.setAttribute("user", user);
       
 %>
-<p>Hello, ${fn:escapeXml(user.nickname)}! (You can
-<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
-
+		<p>Hello, ${fn:escapeXml(user.nickname)}! (You can
+		<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
+		
 <%
-    } else {
-
+    } 
+   	else {
 %>
-<p>Hello!
-<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-to include your name with your post.</p>
-
+			<p>Hello!
+			<a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
+			to write a blog post.</p>
 <%
     }
 
@@ -132,6 +131,8 @@ to include your name with your post.</p>
 
 	
 %>
+
+
 <%	if(user != null)
 	{
 	
