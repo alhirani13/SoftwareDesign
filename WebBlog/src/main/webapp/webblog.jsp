@@ -73,15 +73,13 @@
 			to write a blog post.</p>
 <%
     }
-
 %>
 
 <%
 	ObjectifyService.register(blogPost.class); 
-
 	List<blogPost> posts = ObjectifyService.ofy().load().type(blogPost.class).list();   
-
 	Collections.sort(posts); 
+	Collections.reverse(posts);
 	if (posts.isEmpty()) {
         
         %>
@@ -89,22 +87,38 @@
 
         <%
     } else {
-
         %>
         
         <div class="blog-post">
             
-            
+    <%if(user != null)
+	{
+	
+	 
+	%>
+	    <form action="/ofysign" method="post">
+	      <h4><b>Title</b></h4>
+	  	  <div><textarea name="title" rows="1" cols="60"></textarea></div>
+	  	  <h4><b>Blog Post Content</b></h4>
+	      <div><textarea name="content" rows="3" cols="60"></textarea></div>
+	      <div><input type="submit" value="Post Blog" /> <input type="reset" value="Clear"  /></div>
+	      <input type="hidden" name="webBlogName" value="${fn:escapeXml(webBlogName)}"/>
+	    </form>
+	    
+    <%
+    }
+    
+    %>        
           
         
         <%
-        
-        for (blogPost post : posts) {
+       
+        for(int i = 0; i < 5 && i < posts.size(); i++){
+        	blogPost post = posts.get(i);	
             pageContext.setAttribute("blogPost_content", post.getContent());
             pageContext.setAttribute("blogPost_title", post.getTitle());
             pageContext.setAttribute("blogPost_date", post.getDate());
             if (post.getUser() == null) {
-
                 %>
                 <h3 class="blog-post-title">${fn:escapeXml(blogPost_title)}</h3>
                 <p class="blog-post-meta">${fn:escapeXml(blogPost_date)} by an anonymous person wrote:</p>
@@ -112,43 +126,33 @@
                 <%
             } else {
                 pageContext.setAttribute("blogPost_user", post.getUser());
-
                 %>
                 <h3 class="blog-post-title">${fn:escapeXml(blogPost_title)}</h3>
                 <p class="blog-post-meta">${fn:escapeXml(blogPost_date)} by <a href="#"><b>${fn:escapeXml(blogPost_user.nickname)}</b></a></p>
 
                 <%
             }
-
             %>
             <blockquote>
               ${fn:escapeXml(blogPost_content)}</blockquote>
 		</div><!-- /.blog-post -->
             <%
         }
-
+        %>
+       
+       <a href="https://webblog-ah45675.appspot.com/webblogall.jsp?webBlogName=default"><button id="view_less" class="btn btn-lg btn-primary" >View All Posts</button></a>
+       
+       
+	      <!--  <button id ="view_all" type="submit" class="btn btn-lg btn-primary">Show All Posts</button>
+	      <input type="submit" value="confirm" /> 
+	      <input type="hidden" name="webBlogName" value="${fn:escapeXml(webBlogName)}"/>  -->
+        
+        
+    	<% 
+       
     }
-
 	
 %>
 
-
-<%	if(user != null)
-	{
-	
-	 
-	%>
-    <form action="/ofysign" method="post">
-      <h4><b>Title</b></h4>
-  	  <div><textarea name="title" rows="1.75" cols="60"></textarea></div>
-  	  <h4><b>Blog Post Content</b></h4>
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Post Blog" /></div>
-      <input type="hidden" name="webBlogName" value="${fn:escapeXml(webBlogName)}"/>
-    </form>
-    
-    <%
-    }
-    %>
   </body>
 </html>

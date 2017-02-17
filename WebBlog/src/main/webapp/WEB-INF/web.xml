@@ -12,6 +12,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>webBlog</servlet-name>
 		<url-pattern>/webBlog</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>CronServlet</servlet-name>
+		<servlet-class>webBlog.CronServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CronServlet</servlet-name>
+		<url-pattern>/CronServlet</url-pattern>
+	</servlet-mapping>
+	
+	
 	<servlet>
         <servlet-name>ofysign</servlet-name>
         <servlet-class>webBlog.SignWebBlogServlet</servlet-class>
