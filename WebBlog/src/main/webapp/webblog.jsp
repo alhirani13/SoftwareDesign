@@ -46,8 +46,9 @@
    
 	<font color="#0e3677">
 	<h1 style = "text-align:center"><b> The Pokémon Master Blog</b></h1>
-	<h4 style ="text-align:center"> THE ULTIMATE BLOG FOR THOSE WHO WANT TO BE THE VERY BEST</h4>
+	<h4 style = "text-align:center"> THE ULTIMATE BLOG FOR THOSE WHO WANT TO BE THE VERY BEST</h4>
 	</font>
+	<img src="pokemonlong.jpg" alt="Mountain View" style="width:auto; height:auto">
   	
 <%
     String webBlogName = request.getParameter("webBlogName");
